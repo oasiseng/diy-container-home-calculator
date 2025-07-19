@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIY Container Home Cost Calculator</title>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --primary-hover: #0056b3;
+            --success-color: #28a745;
+            --background-color: #f4f4f4;
+            --container-bg: #fff;
+            --border-color: #ddd;
+            --text-color: #333;
+            --disclaimer-color: #555;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .calculator-container {
+            background-color: var(--container-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h2 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .container-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .container-input-group label {
+            margin-bottom: 0;
+            flex: 1;
+        }
+        .container-input-group input {
+            flex: 1;
+        }
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+        #results-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            display: none;
+        }
+        #results-container h3 {
+            margin-top: 0;
+            color: var(--success-color);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            Bouchard, QC J0J 1A0, Canada
+            border: 1px solid var(--border-color);
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        #disclaimer {
+            font-size: 0.9em;
+            color: var(--disclaimer-color);
+            margin-top: 15px;
+        }
+        #disclaimer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        #disclaimer a:hover {
+            text-decoration: underline;
+        }
+        .alert {
+            color: #d32f2f;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <h2>DIY Container Home Cost Calculator</h2>
+        <form id="costCalculator" role="form" aria-describedby="disclaimer">
+            <div class="form-group">
+                <label>Number of Containers:</label>
+                <div class="container-input-group">
+                    <label for="num20ftStd">20ft Standard:</label>
+                    <input type="number" id="num20ftStd" name="num20ftStd" min="0" value="0" aria-label="Number of 20ft standard containers">
+                </div>
+                <div class="container-input-group">
+                    <label for="num40ftStd">40ft Standard:</label>
+                    <input type="number" id="num40ftStd" name="num40ftStd" min="0" value="0" aria-label="Number of 40ft standard containers">
+                </div>
+                <div class="container-input-group">
+                    <label for="num20ftHc">20ft High Cube:</label>
+                    <input type="number" id="num20ftHc" name="num20ftHc" min="0" value="0" aria-label="Number of 20ft high cube containers">
+                </div>
+                <div class="container-input-group">
+                    <label for="num40ftHc">40ft High Cube:</label>
+                    <input type="number" id="num40ftHc" name="num40ftHc" min="0" value="0" aria-label="Number of 40ft high cube containers">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="bedrooms">Number of Bedrooms:</label>
+                <input type="number" id="bedrooms" name="bedrooms" min="0" value="1" aria-label="Number of bedrooms">
+            </div>
+
+            <div class="form-group">
+                <label for="bathrooms">Number of Bathrooms:</label>
+                <input type="number" id="bathrooms" name="bathrooms" min="0" value="1" aria-label="Number of bathrooms">
+            </div>
+
+            <div class="form-group">
+                <label for="kitchens">Number of Kitchens:</label>
+                <input type="number" id="kitchens" name="kitchens" min="0" value="1" aria-label="Number of kitchens">
+            </div>
+
+            <div class="form-group">
+                <label for="livingAreas">Number of Living/Common Areas:</label>
+                <input type="number" id="livingAreas" name="livingAreas" min="0" value="1" aria-label="Number of living areas">
+            </div>
+
+            <div class="form-group">
+                <label for="foundationType">Foundation Type:</label>
+                <select id="foundationType" name="foundationType" aria-label="Foundation type">
+                    <option value="slab">Concrete Slab</option>
+                    <option value="piers">Concrete Piers/Footings</option>
+                    <option value="gravel">Gravel Pad (Check local codes)</option>
+                </select>
+                <p id="gravelAlert" class="alert" style="display: none;">Gravel pads may not meet local codes for permanent structures. Consult a structural engineer.</p>
+            </div>
+
+            <div class="form-group">
+                <label for="diyLabor">DIY Labor:</label>
+                <select id="diyLabor" name="diyLabor ребенка aria-label="DIY labor level">
+                    <option value="mostly">Mostly DIY</option>
+                    <option value="some">Some DIY, some hired</option>
+                    <option value="little">Little to no DIY</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="modificationLevel">Modification Level:</label>
+                <select id="modificationLevel" name="modificationLevel" aria-label="Modification level">
+                    <option value="minimal">Minimal Modifications</option>
+                    <option value="moderate">Moderate Modifications</option>
+                    <option value="significant">Significant Modifications (Consult Engineer)</option>
+                </select>
+                <p id="modAlert" class="alert" style="display: none;">Significan
+                t modifications require structural engineering review for safety.</p>
+            </div>
+
+            <div class="form-group">
+                <label for="insulationType">Insulation Type:</label>
+                <select id="insulationType" name="insulationಸಿಕ್ಕೆ insulationType" aria-label="Insulation type">
+                    <option value="sprayfoam">Spray Foam Insulation</option>
+                    <option value="rigidfoam">Rigid Foam Boards</option>
+                    <option value="batt">Batt Insulation (Consider moisture)</option>
+                </select>
+            </div>
+
+            <button type="button" onclick="calculateCost()">Estimate Cost</button>
+            <button type="button" onclick="resetForm()">Reset Form</button>
+        </form>
+
+        <div id="results-container" role="region" aria-live="polite">
+            <h3>Estimated Cost Breakdown:</h3>
+            <table id="costBreakdown">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Cost</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <h3>Estimated Total Cost Range:</h3>
+            <p id="costEstimate"></p>
+            <h3>Estimated Total Square Footage:</h3>
+            <p id="sqftEstimate"></p>
+            <h3>Estimated Mid-Range Cost per Square Foot:</h3>
+            <p id="costPerSqFt"></p>
+        </div>
+
+        <p id="disclaimer">
+            <strong>Disclaimer:</strong> This tool provides preliminary cost estimates for DIY container home budgeting in the USA (2025) based on general averages from Container xChange, HomeGuide, and Angi. Actual costs vary due to material choices, labor rates, project complexity, permit fees, land costs, and utility hookups. <strong>Structural modifications, especially significant ones, require professional engineering plans to ensure safety and compliance with local building codes.</strong> Always consult a licensed structural engineer and verify local regulations before starting. Contact <a href="https://oasisengineering.com">Oasis Engineering</a> for expert container home engineering services.
+        </p>
+    </div>
+
+    <script>
+        // Get form input values
+        function getFormInputs() {
+            return {
+                num20ftStd: parseInt(document.getElementById("num20ftStd").value) || 0,
+                num40ftStd: parseInt(document.getElementById("num40ftStd").value) || 0,
+                num20ftHc: parseInt(document.getElementById("num20ftHc").value) || 0,
+                num40ftHc: parseInt(document.getElementById("num40ftHc").value) || 0,
+                bedrooms: parseInt(document.getElementById("bedrooms").value) || 0,
+                bathrooms: parseInt(document.getElementById("bathrooms").value) || 0,
+                kitchens: parseInt(document.getElementById("kitchens").value) || 0,
+                livingAreas: parseInt(document.getElementById("livingAreas").value) || 0,
+                foundationType: document.getElementById("foundationType").value,
+                diyLabor: document.getElementById("diyLabor").value,
+                modificationLevel: document.getElementById("modificationLevel").value,
+                insulationType: document.getElementById("insulationType").value
+            };
+        }
+
+        // Validate inputs to prevent negative or non-numeric values
+        function validateInputs(inputs) {
+            const numericFields = ['num20ftStd', 'num40ftStd', 'num20ftHc', 'num40ftHc', 'bedrooms', 'bathrooms', 'kitchens', 'livingAreas'];
+            for (let field of numericFields) {
+                if (inputs[field] < 0 || isNaN(inputs[field])) {
+                    alert(`Please enter a valid non-negative number for ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
+                    return false;
+                }
+            }
+            if (inputs.num20ftStd + inputs.num40ftStd + inputs.num20ftHc + inputs.num40ftHc === 0) {
+                alert("Please select at least one container.");
+                return false;
+            }
+            return true;
+        }
+
+        // Calculate costs based on inputs
+        function calculateCosts(inputs) {
+            // 2025 cost assumptions (based on Container xChange, HomeGuide, Angi)
+            const costs = {
+                container: {
+                    cost20ftStd: 4000,
+                    cost40ftStd: 5750,
+                    cost20ftHc: 4500,
+                    cost40ftHc: 6500
+                },
+                foundation: {
+                    slab: 7, // $/sq ft
+                    piers: 750, // $/pier (6 piers per container)
+                    gravel: 2 // $/sq ft
+                },
+                amenity: 7500, // $/room (bedroom, bathroom, kitchen, living area)
+                permit: 2000 // Average permit cost
+            };
+
+            // Calculate total square footage
+            const totalSqFt = (inputs.num20ftStd * 20 * 8) + (inputs.num40ftStd * 40 * 8) +
+                              (inputs.num20ftHc * 20 * 8) + (inputs.num40ftHc * 40 * 8);
+
+            // Container costs
+            const containerCost = (inputs.num20ftStd * costs.container.cost20ftStd) +
+                                 (inputs.num40ftStd * costs.container.cost40ftStd) +
+                                 (inputs.num20ftHc * costs.container.cost20ftHc) +
+                                 (inputs.num40ftHc * costs.container.cost40ftHc);
+
+            // Foundation costs
+            let foundationCost = 0;
+            const numContainers = inputs.num20ftStd + inputs.num40ftStd + inputs.num20ftHc + inputs.num40ftHc;
+            if (inputs.foundationType === "slab" || inputs.foundationType === "gravel") {
+                foundationCost = totalSqFt * costs.foundation[inputs.foundationType];
+            } else if (inputs.foundationType === "piers") {
+                foundationCost = numContainers * 6 * costs.foundation.piers;
+            }
+
+            // Amenity costs
+            const amenityCost = (inputs.bedrooms + inputs.bathrooms + inputs.kitchens + inputs.livingAreas) * costs.amenity;
+
+            // Modification and insulation factors
+            const modificationFactor = { minimal: 1.2, moderate: 1.5, significant: 2.0 }[inputs.modificationLevel];
+            const insulationFactor = { sprayfoam: 1.5, rigidfoam: 1.2, batt: 1.0 }[inputs.insulationType];
+            const laborMultiplier = { mostly: 1.0, some: 1.15, little: 1.3 }[inputs.diyLabor];
+
+            // Total cost calculation
+            const baseCost = containerCost + foundationCost + amenityCost + costs.permit;
+            const modifiedCost = baseCost * modificationFactor * insulationFactor;
+            const totalCost = modifiedCost * laborMultiplier;
+
+            return {
+                totalSqFt,
+                containerCost,
+                foundationCost,
+                amenityCost,
+                permitCost: costs.permit,
+                totalCost,
+                lowerBound: Math.round(totalCost * 0.8),
+                upperBound: Math.round(totalCost * 1.2)
+            };
+        }
+
+        // Display results
+        function displayResults(costs) {
+            const midRangeCost = (costs.lowerBound + costs.upperBound) / 2;
+            const costPerSqFt = costs.totalSqFt > 0 ? Math.round(midRangeCost / costs.totalSqFt) : 0;
+
+            // Update cost breakdown table
+            const tbody = document.querySelector("#costBreakdown tbody");
+            tbody.innerHTML = `
+                <tr><td>Containers</td><td>$${costs.containerCost.toLocaleString()}</td></tr>
+                <tr><td>Foundation</td><td>$${costs.foundationCost.toLocaleString()}</td></tr>
+                <tr><td>Amenities</td><td>$${costs.amenityCost.toLocaleString()}</td></tr>
+                <tr><td>Permits</td><td>$${costs.permitCost.toLocaleString()}</td></tr>
+            `;
+
+            // Update summary
+            document.getElementById("costEstimate").textContent = `$${costs.lowerBound.toLocaleString()} - $${costs.upperBound.toLocaleString()}`;
+            document.getElementById("sqftEstimate").textContent = `${costs.totalSqFt} sq ft`;
+            document.getElementById("costPerSqFt").textContent = costPerSqFt > 0 ? `$${costPerSqFt}/sq ft (mid-range)` : "N/A";
+            document.getElementById("results-container").style.display = "block";
+        }
+
+        // Show/hide safety alerts
+        function updateAlerts(inputs) {
+            document.getElementById("gravelAlert").style.display = inputs.foundationType === "gravel" ? "block" : "none";
+            document.getElementById("modAlert").style.display = inputs.modificationLevel === "significant" ? "block" : "none";
+        }
+
+        // Main cost calculation function
+        function calculateCost() {
+            const inputs = getFormInputs();
+            if (!validateInputs(inputs)) return;
+            updateAlerts(inputs);
+            const costs = calculateCosts(inputs);
+            displayResults(costs);
+        }
+
+        // Reset form and results
+        function resetForm() {
+            document.getElementById("costCalculator").reset();
+            document.getElementById("results-container").style.display = "none";
+            document.getElementById("gravelAlert").style.display = "none";
+            document.getElementById("modAlert").style.display = "none";
+        }
+    </script>
+</body>
+</html>
